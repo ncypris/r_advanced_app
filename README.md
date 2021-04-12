@@ -1,10 +1,15 @@
 Public Repository for the Seminar "Data Analysis  in R:  Advanced Applications"
 
-# session2_repetition_codealong
+# Session 2
+**session2_repetition_codealong.Rmd**\
 Codealong file for repeting last semester's content
 
-# project_1
-Tasks for your first project assignment.
+**project_1.pdf**\
+Tasks for your first project assignment
+
+# Session 3
+**project_1.pdf**\
+Tasks for your first project assignment
 
 ## Data
 **bechdel.csv**\
