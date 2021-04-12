@@ -1,7 +1,7 @@
 # r_advanced_app
 Public Repository for the Seminar "Data Analysis  in R:  Advanced Applications"
 
-## Data\
+## Data
 **bechdel.csv**\
 retrieved from
 https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-03-09
