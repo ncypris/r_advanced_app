@@ -1,0 +1,103 @@
+---
+title: "Repetition Winter Semester"
+author: "Niklas Cypris"
+date: "9 4 2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(visdat)
+
+Sys.setenv(LANG = "en")
+```
+
+# READ DATA
+
+https://github.com/rfordatascience/tidytuesday/tree/master/data/2018/2018-10-23
+
+# LOOK AT DATA
+
+# DATA WRANGLING
+
+* filter()
+
+* select()
+
+* mutate()
+
+* summarize()
+
+## FILTER
+
+Used to choose rows
+
+### REMOVING ALL MOVIES FROM UNIVERSAL
+
+### EXERCISE
+
+Remove all movies that were released before 2000
+
+## SELECT
+
+Used to choose columns
+
+### PUTTING MOVIE NAME TO THE FRONT
+
+### EXERCISE 
+
+Remove the distributor column
+
+## MUTATE
+
+Creating new columns and changing existing ones
+
+### COMPUTE DOMESTIC RETURNS PER DOLLAR INVESTED
+
+### EXERCISE
+
+1. Compute overall box office return per Dollar invested.
+
+
+2. Compute a column called 'success' that depicts if the overall return of a movie was above 1 (success = TRUE) or if it was equal or below 1 (success = FALSE)
+
+## SUMMARIZE
+
+Collapsing columns to single values
+
+### EXERCISE
+
+Compute the mean and median return
+
+### SUMMARIZE BY GROUP
+
+# VISUALIZATION
+
+Visualizing distributions:
+
+e.g. histograms for continuous variables
+e.g. barplots for discrete variables
+
+## HISTOGRAMS
+
+Compute the distribution of the production budget
+
+### EXERCISE
+
+Visualize the distribution of box office returns per Dollar invested
+
+## BARPLOTS
+
+Success by Genre
+
+1. Absolute
+
+2. Proportional
+
+### EXERCISE
+
+Filter out all rows that have NA for 'success' and/or 'mpaa_rating'. Then compute the absolute and proportional movie success by mpaa_rating.
+
+1. Absolute
+
+2. Proportional
