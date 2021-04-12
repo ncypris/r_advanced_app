@@ -1,6 +1,12 @@
 # r_advanced_app
 Public Repository for the Seminar "Data Analysis  in R:  Advanced Applications"
 
+# session2_repetition_codealong
+Codealong file for repeting last semester's content
+
+# project_1
+Tasks for your first project assignment.
+
 ## Data
 **bechdel.csv**\
 retrieved from
