@@ -1,0 +1,183 @@
+---
+title: "Repetition Winter Semester"
+author: "Niklas Cypris"
+date: "9 4 2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(visdat)
+
+Sys.setenv(LANG = "en")
+```
+
+# READ DATA
+
+https://github.com/rfordatascience/tidytuesday/tree/master/data/2018/2018-10-23
+
+```{r}
+df <- read_csv(file = "./data/movies.csv")
+```
+
+# LOOK AT DATA
+
+```{r}
+head(df)
+```
+
+```{r eval = FALSE}
+View(df)
+```
+
+```{r}
+df %>% 
+  vis_miss()
+```
+
+# DATA WRANGLING
+
+* filter()
+
+* select()
+
+* mutate()
+
+* summarize()
+
+## FILTER
+
+Used to choose rows
+
+### REMOVING ALL MOVIES FROM UNIVERSAL
+
+```{r}
+unique(df$distributor)
+```
+
+```{r}
+df_no_uni <- df %>% 
+  filter(distributor != "Universal")
+```
+
+### EXERCISE
+
+Remove all movies that were released before 2000
+
+## SELECT
+
+Used to choose columns
+
+### PUTTING MOVIE NAME TO THE FRONT
+
+```{r}
+df <- df %>% 
+  select(movie, everything())
+```
+
+```{r}
+head(df)
+```
+
+### EXERCISE 
+
+Remove the distributor column
+
+## MUTATE
+
+Creating new columns and changing existing ones
+
+### COMPUTE DOMESTIC RETURNS PER DOLLAR INVESTED
+
+```{r}
+df <- df %>% 
+  mutate(dom_return = domestic_gross/production_budget)
+```
+
+```{r}
+head(df)
+```
+
+### EXERCISE
+
+1. Compute overall box office return per Dollar invested.
+
+
+2. Compute a column called 'success' that depicts if the overall return of a movie was above 1 (success = TRUE) or if it was equal or below 1 (success = FALSE)
+
+## SUMMARIZE
+
+Collapsing columns to single values
+
+```{r}
+df %>% 
+  summarise(av_prod_bud = mean(production_budget, na.rm = TRUE),
+            median_prod_bud = format(median(production_budget, na.rm = TRUE), scientific = FALSE))
+```
+
+### EXERCISE
+
+Compute the mean and median return
+
+### SUMMARIZE BY GROUP
+
+```{r}
+df %>% 
+  filter(!is.na(return)) %>% 
+  group_by(genre) %>% 
+  summarise(mean_return = mean(return, na.rm = TRUE),
+            median_return = median(return, na.rm = TRUE))
+```
+
+# VISUALIZATION
+
+Visualizing distributions:
+
+e.g. histograms for continuous variables
+e.g. barplots for discrete variables
+
+## HISTOGRAMS
+
+Compute distribution of the production budget
+
+```{r}
+ggplot(df, aes(x = production_budget)) +
+  geom_histogram(color = "black", fill = "gray", bins = 100)+
+  theme_classic()
+```
+
+### Exercise
+
+Visualize the distribution of box office returns per Dollar invested
+
+## BARPLOTS
+
+Success by Genre
+
+1. Absolute
+
+```{r}
+df %>% 
+  filter(!is.na(success)) %>% 
+  ggplot(aes(x = genre, fill = success)) +
+  geom_bar() +
+  theme_classic()
+```
+
+2. Proportional
+
+```{r}
+df %>% 
+  filter(!is.na(success)) %>% 
+  ggplot(aes(x = genre, fill = success)) +
+  geom_bar(position = "fill") +
+  theme_classic()
+```
+
+### EXERCISE
+
+Filter out all rows that have NA for 'success' and/or 'mpaa_rating'. Then compute the absolute and proportional movie success by mpaa_rating.
+
+1. Absolute
+
+2. Proportional
