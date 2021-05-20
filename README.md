@@ -3,12 +3,6 @@ Public Repository for the Seminar "Data Analysis  in R:  Advanced Applications"
 # Session 2
 **session2_repetition_codealong.Rmd**\
 Codealong file for repeating last semester's content
-<<<<<<< HEAD
-=======
-
-**session2_repetition_codealong_filled.Rmd**\
-Filled codealong file for repeating last semester's content
->>>>>>> afdb0046062e19417c80dcda33718ebb923f3e4c
 
 **project_1.pdf**\
 Tasks for your first project assignment
