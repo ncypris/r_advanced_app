@@ -21,6 +21,10 @@ Introduction to statistical power and simulations
 **session4_simulations1_codealong.Rmd**\
 Codealong file for learning how to simulate data for power analyses
 
+# Session 5
+**bechdel_solution.Rmd**\
+Example solution for project 1
+
 ## Data
 **bechdel.csv**\
 retrieved from
