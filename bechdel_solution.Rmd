@@ -1,0 +1,316 @@
+---
+title: "Bechdel Solution"
+author: "Niklas Cypris"
+date: "1 4 2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(visdat)
+library(car)
+library(ggResidpanel)
+library(parameters)
+
+Sys.setenv(LANG = "en")
+```
+
+# Tasks
+
+Filter movies from 1990
+Visualize missing cases
+Compute fail-pass from clean_test
+Compute gross overall income of movie - select 2013 levels
+Center Predictors
+Visualize distributions of predictors
+Visualize distributions of pass-fail by year
+Check assumptions of multiple regression
+conduct multiple regression or bootstrapping:
+gross ~ test + budget + metascore + imdb_rating
+write an answer to the research question
+
+# READ CSV
+
+```{r}
+df <- read_csv(file = "./data/bechdel.csv")
+```
+
+# Filter >= 1990
+
+```{r}
+df <- df %>% 
+  filter(year >= 1990)
+```
+
+# Visualize Missing
+
+```{r}
+df %>% 
+  vis_miss()
+```
+
+# Compute Pass - Fail
+
+Look at values
+
+```{r}
+table(df$clean_test)
+```
+
+Create variable
+
+```{r}
+df <- df %>% 
+  mutate(pass_fail = ifelse(df$clean_test == "ok", 1, 0)) # pass == 1
+```
+
+Make sure everything went well
+
+```{r}
+df %>% 
+  select(clean_test, pass_fail) %>% 
+  head(10)
+```
+
+# Compute gross overall income of movie
+
+```{r}
+df <- df %>% 
+  mutate(gross_2013 = domgross_2013 + intgross_2013,
+         gross = domgross + intgross)
+```
+
+Make sure everything went well
+
+```{r}
+df %>% 
+  select(gross_2013, domgross_2013, intgross_2013, gross, domgross, intgross) %>% 
+  head(10)
+```
+
+# Center Predictors
+
+```{r}
+df <- df %>% 
+  mutate(budget_c = scale(budget, scale = FALSE)[,1],
+         budget_2013_c = scale(budget_2013, scale = FALSE)[,1],
+         metascore_c = scale(metascore, scale = FALSE)[,1],
+         imdb_rating_c = scale(imdb_rating, scale = FALSE)[,1]
+         )
+```
+
+Make sure everything went well
+
+```{r}
+df %>% 
+  select(budget_c, budget, budget_2013_c, budget_2013, metascore_c, metascore, imdb_rating_c, imdb_rating) %>% 
+  head(10)
+```
+
+# Visualize Distributions of Predictors
+
+## Budget
+
+```{r}
+ggplot(df, aes(x = budget)) +
+  geom_histogram(bins = 100)
+```
+
+## Budget 2013
+
+```{r}
+ggplot(df, aes(x = budget_2013)) +
+  geom_histogram(bins = 100)
+```
+
+## Metascore
+
+```{r}
+ggplot(df, aes(x = metascore)) +
+  geom_histogram(bins = 70)
+```
+
+## IMDB Rating
+
+```{r}
+ggplot(df, aes(x = imdb_rating)) +
+  geom_histogram(bins = 70)
+```
+
+# Pass-Fail by Year
+
+## Absolute
+
+```{r}
+df %>% 
+  mutate(pass_fail = as.factor(pass_fail)) %>% 
+  ggplot(aes(x = year, fill = pass_fail)) +
+  geom_bar() +
+  theme_classic()
+```
+
+## Proportional
+
+```{r}
+df %>% 
+  mutate(pass_fail = as.factor(pass_fail)) %>% 
+  ggplot(aes(x = year, fill = pass_fail)) +
+  geom_bar(position = "fill") +
+  theme_classic()
+```
+
+# Multiple Regression
+
+```{r}
+lm <- lm(gross_2013 ~ pass_fail * budget_2013_c * metascore_c * imdb_rating_c, df)
+```
+
+```{r}
+summary(lm)
+```
+
+# Assumptions
+
+* Variable scales
+
+* Independent observations
+
+* Collinearity
+
+Any violation of the following assumptions reduces the validity of the significance test:
+
+* Normally distributed errors
+
+* Independent errors
+
+* Homogeneous error variance (homoscedasticity)
+
+## Variable scales
+
+Predictors: interval or categorical
+
+Criterion: interval
+
+## Independent observations
+
+E.g. not multiple observations of one person
+
+## Collinearity
+
+Limited correlation between predictors desirable.
+
+
+Collinearity
+
+* increases standard errors (thus reducing power)
+
+* makes interpretation of results harder
+
+
+**Variance Inflation Factor (VIF)**
+
+Square root of the variance inflation factor: Standard error increase compared to if the variable had 0 correlation to other predictor variables in the model. 
+
+Rule of thumb 1: No VIF greater than 10
+
+```{r}
+vif(lm)
+```
+
+Rule of thumb 2: Average VIF not substantially greater than 1
+
+```{r}
+mean(vif(lm))
+```
+
+### Violation
+
+Remove a predictor
+
+Combine predictors
+
+### IMDB and Metascore grouped
+
+```{r}
+df %>% 
+  select(imdb_rating, metascore, budget, pass_fail) %>% 
+  drop_na() %>% 
+  cor()
+```
+
+```{r}
+df <- df %>% 
+  mutate(imdb_rating_z = scale(imdb_rating)[,1],
+         metascore_z = scale(metascore)[,1],
+         acclaim = imdb_rating_z + metascore_z)
+```
+
+```{r}
+lm2 <- lm(gross_2013 ~ pass_fail * budget_2013_c * acclaim, df)
+```
+
+```{r}
+summary(lm)
+```
+
+```{r}
+summary(lm2)
+```
+
+```{r}
+vif(lm2)
+```
+
+```{r}
+mean(vif(lm2))
+```
+
+
+## Normally distributed errors
+
+```{r}
+plot(lm2)
+```
+
+## Independent errors
+
+Test for autocorrelation (e.g. errors are correlated with each other). If autocorrelation is present, you can predict residuals for some observations based on the residuals of other observations.
+
+**Durbin-Watson Test**
+
+P-values not significant = independent errors
+
+```{r}
+dwt(lm2)
+```
+
+## Homoscedasticity
+
+Variance of the residuals constant across all values.
+
+```{r}
+resid_panel(lm2, plots = c("resid", "ls"), smoother = TRUE)
+```
+
+```{r}
+resid_xpanel(lm2, smoother = TRUE)
+```
+
+### Violation
+
+Switch to non-parametric tests
+
+# Results fro multiple regression and bootstrapping
+
+```{r}
+summary(lm2)
+```
+
+```{r}
+bootstrap_parameters(lm2, iterations = 5000)
+```
+
+# Result
+
+Movies who passed the Bechdel test made XXX
+
