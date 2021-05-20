@@ -239,6 +239,14 @@ df %>%
 ```
 
 ```{r}
+df %>% 
+  select(imdb_rating, metascore, budget, pass_fail) %>% 
+  drop_na() %>% 
+  plot() # Thanks, Yi Yen :)
+```
+
+
+```{r}
 df <- df %>% 
   mutate(imdb_rating_z = scale(imdb_rating)[,1],
          metascore_z = scale(metascore)[,1],
@@ -307,10 +315,26 @@ summary(lm2)
 ```
 
 ```{r}
+set.seed(161)
 bootstrap_parameters(lm2, iterations = 5000)
 ```
 
 # Result
 
-Movies who passed the Bechdel test made XXX
+RQ1: Does passing the Bechdel test predict its overall box office success?
+
+YES (yay feminism)
+
+RQ2: Does critical acclaim predict overall box office success?
+
+YES
+
+RQ3: Does the budget predict overall box office success?
+
+YES
+
+RQ4: Does overall box office success depend on any interactions?
+
+Yes for: budget_2013_c:acclaim
+
 
