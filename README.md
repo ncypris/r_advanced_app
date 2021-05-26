@@ -25,6 +25,10 @@ Codealong file for learning how to simulate data for power analyses
 **bechdel_solution.Rmd**\
 Example solution for project 1
 
+# Session 6
+**session6_codealong.Rmd**\
+Codealong file for advanced data wrangling
+
 ## Data
 **bechdel.csv**\
 retrieved from
@@ -33,3 +37,6 @@ https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-03-09
 **movies.csv**\
 retrieved from
 https://github.com/rfordatascience/tidytuesday/tree/master/data/2018/2018-10-23
+
+**lm.Rda**\
+Linear regression model from the Bechdel data set for visualizing triple interactions
