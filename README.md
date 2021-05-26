@@ -1,4 +1,4 @@
-Public Repository for the Seminar "Data Analysis  in R:  Advanced Applications"
+Public Repository for the Seminar "Data Analysis in R: Advanced Applications"
 
 # Session 2
 **session2_repetition_codealong.Rmd**\
