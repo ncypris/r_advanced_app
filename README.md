@@ -29,6 +29,9 @@ Example solution for project 1
 **session6_codealong.Rmd**\
 Codealong file for advanced data wrangling
 
+**session6_codealong_filled.Rmd**\
+Filled codealong file for repeating last semester's content
+
 ## Data
 **bechdel.csv**\
 retrieved from
