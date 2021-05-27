@@ -1,0 +1,209 @@
+---
+title: 'Session 6: Advanced Data Wrangling'
+author: "Niklas Cypris"
+date: "25 5 2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(sjPlot)
+
+get_mode <- function(x, na.rm = FALSE) { # from: https://stackoverflow.com/questions/2547402/how-to-find-the-statistical-mode
+  if(na.rm){
+    x = x[!is.na(x)]
+  }
+
+  ux <- unique(x)
+  return(ux[which.max(tabulate(match(x, ux)))])
+}
+```
+
+```{r load and prepare data}
+load("./data/lm.Rda")
+bechdel <- read_csv(file = "./data/bechdel.csv")
+movies <- read_csv("./data/movies.csv")
+
+movies <- movies %>% 
+  filter(mpaa_rating %in% c("R", "PG-13")) %>% 
+  mutate(returns = rowSums(select(., ends_with("_gross"))),
+         budget_c = scale(production_budget, scale = FALSE)[,1],
+         year_c = scale(release_date, scale = FALSE)[,1])
+```
+
+# VISUALIZING TRIPLE INTERACTIONS
+
+https://strengejacke.github.io/sjPlot/articles/plot_interactions.html
+
+```{r}
+summary(lm2)
+```
+
+`terms`: Up to three predictors. Second and third predictor for grouping.
+
+Grouping by interval scaled predictors: Usually at -1 SD, Mean, + 1 SD
+
+```{r}
+plot_model(lm2, type = "pred", terms = c("budget_2013_c", "acclaim", "pass_fail"))+
+  theme_classic()
+```
+
+```{r}
+plot_model(lm2, type = "pred", terms = c("acclaim", "budget_2013_c", "pass_fail"))+
+  theme_classic()
+```
+
+## EXERCISE
+
+```{r}
+lm <- lm(returns ~ budget_c * year_c * mpaa_rating, movies)
+
+summary(lm)
+```
+
+Visualize how the relationship between movie budget and returns varies based on mpaaa rating and release year.
+
+```{r}
+
+```
+
+# JOINING DATA SETS
+
+https://github.com/gadenbuie/tidyexplain
+
+```{r make example data sets}
+bechdel <- bechdel %>% 
+  mutate(id = 1:nrow(.)) %>% 
+  select(id, everything())
+
+bechdel1 <- bechdel[1:(nrow(bechdel)-4),1:4]
+bechdel2 <- bechdel[5:nrow(bechdel),c(1, 5:ncol(bechdel))]
+```
+
+## INNER JOIN
+
+All rows from x where there are matching values in y, and all columns from x and y.
+
+```{r}
+innerjoin <- inner_join(bechdel1, bechdel2, by = c("id" = "id"))
+```
+
+## LEFT JOIN
+
+All rows from x, and all columns from x and y. Rows in x with no match in y will have NA values in the new columns.
+
+```{r}
+leftjoin <- left_join(bechdel1, bechdel2, by = c("id" = "id"))
+```
+
+## RIGHT JOIN
+
+All rows from y, and all columns from x and y. Rows in y with no match in x will have NA values in the new columns.
+
+```{r}
+rightjoin <- right_join(bechdel1, bechdel2, by = c("id" = "id"))
+```
+
+## FULL JOIN
+
+All rows and all columns from both x and y. Where there are not matching values, returns NA for the one missing.
+
+```{r}
+fulljoin <- full_join(bechdel1, bechdel2, by = c("id" = "id"))
+```
+
+## SEMI JOIN
+
+All rows from x where there are matching values in y, keeping just columns from x.
+
+## ANTI JOIN
+
+All rows from x where there are not matching values in y, keeping just columns from x.
+
+## EXERCISE
+
+```{r make example data sets}
+movies <- movies %>% 
+  mutate(id = 1:nrow(.)) %>% 
+  select(id, everything())
+
+movies1 <- movies[1:(nrow(movies)-400), 1:3]
+movies2 <- movies[200:nrow(movies), c(1, 4:ncol(movies))]
+```
+
+You want to join movies1 and movies2 to create a movies_new1 data frame. That data frame should contain all rows and columns from movies1 and all columns from movies2. Select the correct *join() command.
+
+```{r}
+
+```
+
+You want to join movies1 and movies2 to create a movies_new2 data frame. That data frame should contain all rows and columns from movies1 and all rows and columns from movies2. Select the correct *join() command.
+
+```{r}
+
+```
+
+
+# STRING MANIPULATIONS
+
+## Separating text into different columns
+
+separate(
+
+`column to be split`,
+`into =` list of new column names,
+`sep =` separator
+
+)
+
+```{r}
+bechdel_directors <- bechdel %>% 
+  separate(director, into = paste0("director_", 1:3), sep = ",", remove = FALSE)
+```
+
+## EXERCISE
+
+Split the `writer` column like the `director` column was split. How many columns do you need to create in order to discard additional pieces in less than 10 rows?
+
+```{r}
+
+```
+
+
+## Joining text columns into one
+
+unite(
+
+`col =` name of new column
+`select` select columns to unite
+`sep =`choose separator
+
+)
+
+```{r}
+bechdel_directors %>% 
+  unite(col = "directors", starts_with("director_"), sep = ",", na.rm = TRUE, remove = FALSE) %>% 
+  select(starts_with("dir"))
+```
+
+
+## Selecting rows based on text
+
+```{r}
+bechdel %>% 
+  filter(director == "Tarantino")
+```
+
+```{r}
+bechdel %>% 
+  filter(str_detect(director, "Tarantino"))
+```
+
+
+## EXERCISE
+
+Choose your favorite director and see how many of their movies are included in this data set.
+
+```{r}
+
+```
