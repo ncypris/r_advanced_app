@@ -1,0 +1,290 @@
+---
+title: "session7_dataviz_codealong"
+output: pdf_document
+---
+---
+title: "session 7 solutions"
+author: "Kaley Lesperance"
+date: "9 6 2021"
+output: pdf_document
+---
+
+```{r setup}
+library(tidyverse)
+library(patchwork)
+library(ggcorrplot)
+library(psych)
+library(visdat)
+
+Sys.setenv(LANG = "en")
+```
+
+
+# QUICK REVIEW
+
+Load in the dataset for this week
+```{r}
+majors <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-10-16/recent-grads.csv")
+```
+
+Let's have a look at our dataset
+```{r}
+View(majors)
+```
+
+Visualize any missing data
+```{r}
+majors %>% 
+  vis_miss()
+```
+
+For some reason all the Major names are in all caps, which is not necessarily a problem, just annoying.
+Cool R trick though, we can change that!
+```{r}
+majors <- majors %>% 
+  mutate(Major = str_to_title(Major))
+```
+
+
+```{r}
+head(majors)
+```
+
+## Let's review a couple of the more common graphs
+
+## ONE CATEGORICAL VARIABLE
+
+### 
+Make a plot of how many majors are in each of the various major categories:
+```{r}
+
+```
+
+
+## ONE CONTINUOUS VARIABLE
+
+###
+Visualize the distribution of the unemployment rate (this was calculated as # of unemployed/Total #)
+```{r}
+
+```
+
+
+## TWO CONTINUOUS VARIABLES
+
+### 
+Plot the relationship between median salary and unemployment rate
+```{r}
+
+```
+## CONTINUOUS WITH CATEGORICAL
+
+### 
+Visualize the distribution of the median salary for each major category
+```{r}
+
+```
+
+-----------------------------
+# CUSTOMIZING OUR PLOTS
+
+
+## FLIPPING AND REORDERING
+
+Let's go back to the boxplot above. How could we make this more understandable?
+
+```{r}
+  
+```
+
+Let's look at another example of this where we look at the median salary for each major within the Engineering category. 
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+#EXERCISE
+
+Pick a major category. Make a flipped, ordered barplot of the share of women for each major in that category. Which major from that category has the highest share of women? Which one has the least?
+
+```{r}
+
+```
+
+
+
+# Adding text to our data inside of plots
+
+
+We can use geom_text() or geom_label() to automatically label data in our graph. This is most typically used in scatterplots.
+
+Scatterplot of the the unemployment rates and median salary for each education major using geom_text()
+```{r}
+
+```
+
+We can also color the labels.
+```{r}
+  
+```
+
+We can use geom_label to do the same thing with a slightly different look. 
+```{r}
+
+```
+
+We can also add our own custom labels and text anywhere in the plot
+
+```{r}
+           
+```
+
+
+# EXERCISE
+Use geom_label() to add a label next to the highest point on the scatter plot (Median vs unemployment rate) you made in the previous example.
+
+```{r}
+
+```
+
+
+## Editing plot labels and titles
+
+There are a couple different ways to do this in ggplot. As we know from last semester, we can use the "ggtitle" command to add an overall title to our plot:
+
+
+```{r}
+ 
+```
+
+We can also use xlab() or ylab() to adjust the labels for the respective axes:
+
+```{r}
+
+```
+
+
+We can also adjust the labels in the scale function as well with the "name = " argument:
+
+```{r}
+
+```
+
+
+However, we can also use the labs() function, which allows us to add a title, subtitle, x label, y label and caption all in one function:
+
+```{r}
+
+```
+
+
+# EXERCISE
+
+## Make a scatterplot visualizing the relationship between amount of people with non college degree jobs and amount of people with low wage jobs. Use the labs() function to label the axes, add a title and a subtitle. 
+```{r}
+
+
+```
+
+## Multiple Plots
+
+## Using Facets
+
+Last semester you learned how to use the two facet functions in ggplot to get multiple graphs in one grid. Let's review this really quickly.
+
+```{r}
+ggplot(majors, aes(x = ShareWomen))+
+  geom_density()+
+  facet_wrap(.~Major_category)
+```
+
+However, what if we want to combine different types of graphs that don't have a common variable? (E.g., a scatterplot, barchart and histogram)
+
+We can use the "patchwork" package for this:
+```{r}
+
+```
+
+And we save it using ggsave()
+```{r}
+
+```
+
+
+
+#EXERCISE
+## Make a histogram of Median Salary, a barplot of Median salary within the Health majors and one other graph of your choice. Combine them into one figure and save it.
+
+```{r}
+
+```
+
+# INSPECTING DATA & VISUALIZING CORRELATIONS
+
+## Check multiple histograms
+```{r}
+
+```
+
+# Pairs plot
+```{r}
+
+```
+
+```{r}
+
+```
+
+# Visualizing correlations using ggcorrplot
+
+There are a lot of different ways to visualize correlation matrices. I like this one. 
+
+First we need to create our correlation matrix. We can do this using by simply using the cor() function:
+
+```{r}
+corrmat <- cor(mtcars)
+corrmat
+```
+
+Now let's make this into a more visual matrix
+```{r}
+ggcorrplot(corrmat)
+
+```
+
+```{r}
+
+```
+
+We can also include the significance levels (but first we need to make the p value matrix)
+```{r}
+
+```
+
+You can then set the function to leave the insignificant correlations blank:
+```{r}
+
+```
+
+
+# EXERCISE
+
+Go back to the data we used for the Bechdel test project. Create a visual correlation matrix like the one above of the budget, domgross, intgross, metascore & imdb rating (and the 2013 variables as well if you want!) 
+
+```{r}
+
+```
+
+----------------------------
+
+I think you guys have already seen this, but I am putting it here again just in case:
+
+https://www.r-graph-gallery.com/
+
+
+
