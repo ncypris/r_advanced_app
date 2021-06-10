@@ -2,12 +2,6 @@
 title: "session7_dataviz_codealong"
 output: pdf_document
 ---
----
-title: "session 7 solutions"
-author: "Kaley Lesperance"
-date: "9 6 2021"
-output: pdf_document
----
 
 ```{r setup}
 library(tidyverse)
@@ -22,7 +16,7 @@ Sys.setenv(LANG = "en")
 
 # QUICK REVIEW
 
-Load in the dataset for this week
+Load in the dataset
 ```{r}
 majors <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-10-16/recent-grads.csv")
 ```
