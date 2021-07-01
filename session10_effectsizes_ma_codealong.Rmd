@@ -1,0 +1,136 @@
+---
+title: "Effect Sizes & Meta-Analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(effsize)
+library(effectsize)
+library(metafor)
+library(tidyverse)
+
+Sys.setenv(LANG = "en")
+```
+
+# Effect Sizes 
+
+Although effect sizes are an important value to report, they are not typically displayed in a standard output, for example from a t-test.
+
+
+#Example data set for t-test
+```{r}
+set.seed(5)
+data <- tibble(
+  dv = c(rnorm(n = 10000, mean = 100, sd = 10),
+         rnorm(n = 10000, mean = 99, sd = 10)),
+  id = c(rep("a", 10000), rep("b", 10000))
+  )
+
+```
+
+#Run a t-test on the variable "dv" by "id"
+```{r}
+
+```
+
+What do the results of this t-test tell us?
+
+
+How big is the difference actually between these two groups? Let's just look at the unstandardized means for each group:
+
+```{r}
+
+```
+
+
+This doesn't seem like that big of a difference, but for a closer look, we can use effect size of standardized mean difference. That's where Cohen's d comes in. We can calculate this using the "effsize" package.
+```{r}
+
+```
+
+Even though we found a significant effect, it was actually quite small.
+
+There are a lot of packages that contain fucntions to calculate Cohen's d, with similar notation:
+
+"lsr"
+"effectsize"
+"psych"
+
+```{r}
+
+```
+
+# EXERCISE
+
+Data frame with student grades and whether they had teacher A or teacher B
+```{r}
+grade <- c(55, 65, 65, 68, 70, 56, 60, 62, 66) #student grades
+teacher <- c("A", "A", "A", "A", "A", "B", "B", "B", "B") #teacher 
+
+exams <- data.frame(grade, teacher)
+```
+
+Compute the effect size for student grades by teacher. (Remember to think about the sample size and what this means about how we compute the effect size!)
+```{r}
+
+```
+
+############################################
+
+#Effect Sizes in Meta-Analysis
+
+When conducting a meta-analysis, we often need to compute the effect sizes of interest for many studies. Doing this one by one would be super tedious, luckily we can use R and the package metafor to do it all in one go. 
+
+## Standardized Mean Differences
+```{r}
+smd_meta<-data.frame(
+  id = c("001","002","003","004","005","006","007","008","009","010","011"),
+  author_year = c("Ruva 2007","Smith 2007","Chrzanowski 2006","Studebaker 2000",
+                  "Hayes 2008","Bradshaw 2007","Longe 2010","Wilson 1998",
+                  "Otto 1994","Locatelli 2011","Ramos 2005"),
+  n1 = c(138,140,144,21,54,78,92,31,29,90,181),
+  n2 = c(138,142,234,21,52,20,18,15,13,29,53),
+  m1 = c(5.29,5.05,1.97,5.95,5.07,6.22,5.47,6.13,5.69,4.81,4.83),
+  m2 = c(4.08,3.89,2.45,3.67,3.96,5.75,4.89,3.80,3.61,4.61,4.51),
+  sd1 = c(1.65,1.50,1.08,1.02,1.65,2.53,2.31,2.51,2.51,1.20,1.19),
+  sd2 = c(1.67,1.61,1.22,1.20,1.76,2.17,2.59,2.68,2.78,1.39,1.34)
+)
+```
+
+# Calculating standardized mean differences for each study
+```{r}
+
+```
+
+#Visualize the effect sizes using a forest plot
+```{r}
+
+```
+
+#EXERCISE
+
+Dataset with results from 9 studies on the length of hospital stay of stroke patients under specialized vs. non specialized care
+```{r}
+dat <- dat.normand1999
+```
+
+Calculate the SMDs for all the studies in the dataset
+```{r}
+
+```
+
+Create a forest plot displaying the effect sizes and their confidence intervals
+```{r}
+
+```
+
+## Correlation Coefficients
+
+```{r}
+cor_meta <- dat.mcdaniel1994
+```
+
+Use the escalc function to calculate the z-transformed correlations for all studies
+```{r}
+
+```
