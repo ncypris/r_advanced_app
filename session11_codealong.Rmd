@@ -1,0 +1,108 @@
+---
+title: "session11_codealong"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(metafor)
+library(tidyverse)
+
+Sys.setenv(LANG = "en")
+```
+
+
+# Today we are going to be looking at a brief rundown of estimating a meta-analytic model, interpeting the various values and drawing conclusions
+
+## We will be using a dataset from a meta-analysis examining the effectiveness of school-based writing-to-learn interventions on academic achievement
+
+source: Bangert-Drowns, R. L., Hurley, M. M., & Wilkinson, B. (2004). The effects of school-based writing-to-learn interventions on academic achievement: A meta-analysis. Review of Educational Research, 74(1), 29-58, https://doi.org/10.3102/00346543074001029
+
+FYI: the standardized mean differences are already computed for the studies in this dataset, so there is no need to use the escalc() function; positive values indicate a higher mean level of academic achievement in the group receiving the writing-to-learn intervention compared to the control group
+
+
+The first thing we need to do is estimate our model. Before we do that, we have to make an important decision - fixed-effects or random-effects?
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+The important things to look at:
+
+- tau squared (estimated amount of total heterogeneity)
+- I^2(total heterogeneity / total variability)
+- Q-statistic test for heterogeneity (if significant, means we have hetereogeneity)
+- model results (shows us the average effect size)
+- 95% predicition interval (where the true effects are to be expected for 95% of similar (exchangeable) studies that might be conducted in the future)
+
+Do the results suggest that writing-to-learn interventions have on average a positive effect on academic achievement? How consistent is the effect across studies?
+
+# Visualizing results with a forest plot
+```{r fig.height= 7, fig.width = 10}
+
+```
+
+# Explaining Heterogeneity with Moderator Analyses
+
+Does length of intervention moderate the effects? 
+```{r}
+
+```
+
+Does grade level moderate the effects?
+```{r}
+
+```
+
+
+```{r}
+predict(grade, newmods=c(0,0,0), digits=2)
+predict(grade, newmods=c(1,0,0), digits=2)
+predict(grade, newmods=c(0,1,0), digits=2)
+predict(grade, newmods=c(0,0,1), digits=2)
+```
+
+# Publication Bias
+
+Publication bias is usually defined as the tendency from authors to publish studies with significant results 
+
+Examining funnel plot:
+```{r}
+
+```
+
+Using Egger's regression test
+```{r}
+
+```
+
+# OPTIONAL PRACTICE: 
+Meta-analysis of studies examining how teachers' expectations about their pupils can influence actual IQ levels
+
+The standardized mean differences are already computed for the studies in this dataset, so there is no need to use the escalc() function; positive values indicate that the supposed 'bloomers' had, on average, higher IQ scores than those in the control group
+
+```{r}
+data <- dat.raudenbush1985
+data
+```
+
+# Fit a random-effects model
+```{r}
+
+```
+
+# Obtain the 95% prediction interval
+```{r}
+
+```
+
+Do the results suggest that expectations have on average a positive effect on actual IQ levels? Also, how consistent is the effect across studies?
+
+# Create a forest plot of the random effects model
+```{r}
+
+```
+
