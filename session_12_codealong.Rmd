@@ -1,0 +1,87 @@
+---
+title: "Final Session"
+author: "Niklas Cypris"
+date: "13 7 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(psych)
+
+Sys.setenv(LANG = "en")
+```
+
+```{r}
+df <- read_csv("./data/bechdel.csv")
+```
+
+
+# FUNCTIONS in R
+
+Looking inside a function
+
+
+## Writing a function
+
+### Example Problem
+
+Centering variables
+
+
+### Function Elements
+
+```{r}
+cen <- function(x){
+  
+  scale(x, scale = FALSE)[,1]
+  
+}
+```
+
+function(x)
+
+All relevant data/arguments/etc that you want to be able to vary should be defined in the round brackets.
+
+{}
+
+The stuff that the function is supposed to do has to be put in the curly brackets.
+
+
+Explain the function
+
+
+
+# EXERCISES
+
+Write a function called z_standard similar to cen that only gives out the z standardized number vector.
+
+```{r}
+
+```
+
+Write a function that squares each observation you input.
+
+```{r}
+
+```
+
+# FACTOR ANALYSIS
+
+```{r}
+load("./data/tum_id.Rda")
+```
+
+```{r}
+View(tum_id)
+```
+
+Number of factors: Visual Inspection
+
+
+# EXERCISE
+
+Vary the number of factors to one.
+
+
+Change the cut to .3
